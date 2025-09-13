@@ -1,19 +1,15 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from flask import Flask, render_template, request
 
-class Lobster(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-Type', 'text/html')
-        self.end_headers()
-        with open('index.html', 'r') as file:
-            content = file.read()
-        self.wfile.write(content.encode('utf-8'))
+app = Flask(__name__)
 
-def runServer():
-    server_address = ('', 8000)
-    httpd = HTTPServer(server_address, Lobster)
-    print('Starting server on http://127.0.0.1:8000')
-    httpd.serve_forever()
+@app.route('/', methods=['GET'])
+def index():
+    return render_template("index.html")
+
+@app.route('/extract', methods=['POST'])
+def extract():
+    url = request.form.get("url")
+    return render_template("extract.html", url=url)
 
 if __name__ == '__main__':
-    runServer()
+    app.run()
