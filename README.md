@@ -10,3 +10,9 @@
 - Regex Matching and Tree layout visualization (python)
 - Interactive html element selection (python + js)
 - Save final data (json)
+
+## Idea
+
+- web server : http.server (server.py)
+- scrapping logic : re (scraper.py)
+- frontend : html (index.html)
