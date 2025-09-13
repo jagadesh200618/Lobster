@@ -2,6 +2,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class Lobster(BaseHTTPRequestHandler):
     def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/html')
+        self.end_headers()
         with open('index.html', 'r') as file:
             content = file.read()
         self.wfile.write(content.encode('utf-8'))
