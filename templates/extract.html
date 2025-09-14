@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Extracted Tags</title>
 
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
 
     <style>
@@ -65,30 +64,54 @@
             background: #fafafa;
             border-radius: 4px;
         }
+
+        /* New CSS for the Macro's Content */
+        .tag-name {
+            color: #880e4f; /* Darker pink for tag name */
+        }
+
+        .attr-key {
+            color: #b71c1c; /* A deep red for attribute key */
+        }
+
+        .attr-value {
+            color: #0d47a1; /* A deep blue for attribute value */
+        }
+
+        .text-content {
+            color: #388e3c; /* A dark green for text content */
+        }
     </style>
 </head>
 <body>
     <h1>HTML Tags Tree</h1>
 
-    {% from 'macros.html' import render_node %}
+    {% macro render_node(node) %}
+        {% if node.tag == "text" %}
+            <span class="text-content">"{{ node.text }}"</span>
+        {% else %}
+            <details>
+                <summary>
+                    <span class="tag-name">&lt;{{ node.tag }}</span>
+                    {% for key, value in node.attr.items() %}
+                        <span class="attr-key">{{ key }}</span><span style="color: #333;">=</span><span class="attr-value">"{{ value }}"</span>
+                    {% endfor %}
+                    <span class="tag-name">&gt;</span>
+                </summary>
+                <ul>
+                    {% if node.text %}
+                        <li><span class="text-content">"{{ node.text }}"</span></li>
+                    {% endif %}
+                    {% for child in node.child %}
+                        {{ render_node(child) }}
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endif %}
+    {% endmacro %}
 
     <div class="tree-container">
         {{ render_node(tag) }}
     </div>
 </body>
 </html>
-
-{% macro render_node(node) %}
-    {% if node.tag == "text" %}
-        <li>{{ node.text }}</li>
-    {% else %}
-        <details>
-            <summary>{{ node.tag }}</summary>
-            <ul>
-                {% for child in node.child %}
-                    {{ render_node(child) }}
-                {% endfor %}
-            </ul>
-        </details>
-    {% endif %}
-{% endmacro %}

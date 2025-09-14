@@ -4,10 +4,10 @@
 - [x] Simple Html | server get command
 - [x] Enter the url | server post command
 - [x] Url Extarction Tree
-- [ ] Show the extracted tag in frontend
+- [x] Show the extracted tag in frontend
   - [x] showing tags in tree
-  - [ ] showing atrributes
-  - [ ] showing text
+  - [x] showing atrributes
+  - [x] showing text
 - [ ] Tag Selection UI
   - [ ] Filter type
 - [ ] Selection pattern to store

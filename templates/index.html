@@ -62,7 +62,9 @@
                 border-radius: 10px;
                 cursor: pointer;
                 font-size: 16px;
-                transition: background 0.3s ease, transform 0.2s ease;
+                transition:
+                    background 0.3s ease,
+                    transform 0.2s ease;
             }
 
             button:hover {
@@ -74,11 +76,20 @@
     <body>
         <div class="container">
             <!-- Add your logo here -->
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Lobster_icon.svg/1024px-Lobster_icon.svg.png" alt="Logo" class="logo">
+            <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Lobster_icon.svg/1024px-Lobster_icon.svg.png"
+                alt="Logo"
+                class="logo"
+            >
 
             <h1>Enter the URL</h1>
             <form action="/extract" method="post">
-                <input type="url" name="url" placeholder="Enter the URL" required />
+                <input
+                    type="url"
+                    name="url"
+                    placeholder="Enter the URL"
+                    required
+                >
                 <br>
                 <button type="submit">Extract</button>
             </form>
