@@ -1,13 +1,94 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Extracted Tags</title>
-        <style></style>
-    </head>
-    <body>
-        <h1>HTML Tags Tree</h1>
-        {% from 'macros.html' import render_node %}
-        <div class="tree-container">{{ render_node(tag) }}</div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>Extracted Tags</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Baloo 2', cursive;
+            background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #ff477e;
+            margin: 20px 0;
+        }
+
+        .tree-container {
+            width: 70%;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid #ff6b81;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        details {
+            background: #fce4ec;
+            margin: 6px 0;
+            padding: 6px;
+            border: 1px solid #ff6b81;
+            border-radius: 8px;
+        }
+
+        details[open] {
+            background: #f8bbd0;
+        }
+
+        summary {
+            cursor: pointer;
+            font-size: 16px;
+            color: #c2185b;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        li {
+            font-size: 15px;
+            margin: 4px 0;
+            padding: 4px;
+            border-left: 3px solid #ff6b81;
+            background: #fafafa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HTML Tags Tree</h1>
+
+    {% from 'macros.html' import render_node %}
+
+    <div class="tree-container">
+        {{ render_node(tag) }}
+    </div>
+</body>
 </html>
+
+{% macro render_node(node) %}
+    {% if node.tag == "text" %}
+        <li>{{ node.text }}</li>
+    {% else %}
+        <details>
+            <summary>{{ node.tag }}</summary>
+            <ul>
+                {% for child in node.child %}
+                    {{ render_node(child) }}
+                {% endfor %}
+            </ul>
+        </details>
+    {% endif %}
+{% endmacro %}
