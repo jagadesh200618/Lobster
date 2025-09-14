@@ -14,5 +14,5 @@
 ## Idea
 
 - web server : http.server (server.py)
-- scrapping logic : re (scraper.py)
+- scrapping logic : beautifulsoup (scraper.py)
 - frontend : html (index.html)
