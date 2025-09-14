@@ -6,14 +6,7 @@ def tagExtract(url: str):
     response = requests.get(url)
     soup  = BeautifulSoup(response.content, "html.parser")
     tree = extractHtmlNode(soup)
-    tags = []
-    def tagName(element):
-        if element == None: return
-        tags.append(element.tag)
-        for child in element.child:
-            if child: tagName(child)
-    tagName(tree)
-    return "\n".join(tags)
+    return tree
 
 class HtmlNode:
     def __init__(self, tag: str, attr: dict):

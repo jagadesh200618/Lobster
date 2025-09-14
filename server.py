@@ -10,9 +10,9 @@ def index():
 @app.route('/extract', methods=['POST'])
 def extract():
     url = request.form.get("url")
-    content = ""
+    content = None
     if url != None: content = tagExtract(url)
-    return render_template("extract.html", url=render_template_string(content))
+    return render_template("extract.html", tag=content)
 
 if __name__ == '__main__':
     app.run()

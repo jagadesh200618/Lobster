@@ -1,10 +1,13 @@
 <!doctype html>
-<html>
+<html lang="en">
     <head>
-        <title>lobster</title>
+        <meta charset="UTF-8" />
+        <title>Extracted Tags</title>
+        <style></style>
     </head>
     <body>
-        <h1>Extracted Url</h1>
-        {{url}}
+        <h1>HTML Tags Tree</h1>
+        {% from 'macros.html' import render_node %}
+        <div class="tree-container">{{ render_node(tag) }}</div>
     </body>
 </html>
