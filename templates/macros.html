@@ -1,0 +1,10 @@
+{% macro render_node(node) %} {% if node.tag == "text" %}
+<li>{{ node.text }}</li>
+{% else %}
+<details>
+    <summary>{{ node.tag }}</summary>
+    <ul>
+        {% for child in node.child %} {{ render_node(child) }} {% endfor %}
+    </ul>
+</details>
+{% endif %} {% endmacro %}
