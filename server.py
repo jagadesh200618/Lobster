@@ -12,7 +12,7 @@ def extract():
     url = request.form.get("url")
     content = None
     if url != None: content = tagExtract(url)
-    return render_template("extract.html", tag=content.child[1])
+    return render_template("extract.html", tag=content)
 
 if __name__ == '__main__':
     app.run()

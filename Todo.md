@@ -9,6 +9,12 @@
   - [x] showing atrributes
   - [x] showing text
 - [ ] Tag Selection UI
+  - [x] BeautifuSoup -> LXML
   - [ ] Filter type
+    - [ ] xpath
+    - [ ] css
+    - [ ] tag name
+    - [ ] text
+    - [ ] making recursive
 - [ ] Selection pattern to store
 - [ ] Enhancement of UI and logic
