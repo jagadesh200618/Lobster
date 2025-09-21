@@ -16,5 +16,5 @@
     - [ ] tag name
     - [ ] text
     - [ ] making recursive
-- [ ] Selection pattern to store
+- [x] Download filtered
 - [ ] Enhancement of UI and logic

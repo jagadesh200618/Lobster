@@ -1,12 +1,19 @@
 import requests
 from lxml import html, etree
 from typing import List, Optional
+from dataclasses import dataclass
 
 def tagExtract(url: str):
     response = requests.get(url)
     extracted = html.fromstring(response.content)
     tree = extractHtmlNode(extracted)
     return tree
+
+@dataclass
+class Config:
+    tag: bool = True
+    attr: bool = True
+    text: bool = True
 
 class HtmlNode:
     def __init__(self, tag: str, attr: dict):
@@ -41,6 +48,20 @@ class HtmlNode:
             return result
 
         return None
+
+    def toJson(self, config: Config):
+        result = {}
+        if config.tag:
+            result["tag"] = self.tag
+        if config.attr:
+            result["attr"] = self.attr
+        if config.text:
+            result["text"] = self.text
+
+        result["child"] = [child.toJson(config) for child in self.child]
+        
+        return result
+
 
 def extractHtmlNode(element) -> Optional[HtmlNode]:
     # text

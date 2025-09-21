@@ -1,5 +1,6 @@
-from flask import Flask, render_template, render_template_string, request, session
-from scrapper import tagExtract
+from flask import Flask, render_template, render_template_string, request, session, Response
+from scrapper import tagExtract, Config
+import json
 
 app = Flask(__name__)
 app.secret_key = "my-secrect-key"
@@ -21,13 +22,27 @@ def extract():
 @app.route('/filter', methods=['POST'])
 def filterFn():
     filter_data = request.get_json()
+    print(filter_data)
     content = html_cache["extracted"]
     return render_template("extract.html", tag=content)
 
 
 @app.route('/download', methods=['POST'])
 def download():
-    pass
+    filter_data = request.get_json()
+    content = html_cache["extracted"]
+    config = Config()
+    output = content.toJson(config)
+    json_output = json.dumps(output, indent=4)
+
+    response = Response(
+        json_output,
+        mimetype="application/json",
+        headers={"Content-Disposition": "attachment; filename=result.json"}
+    )
+    return response
+    
+    
 
 if __name__ == '__main__':
     app.run()
