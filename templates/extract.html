@@ -223,42 +223,22 @@
                             <option value="tagname">Tag Name</option>
                             <option value="text">Text</option>
                         </select>
-                        <button class="add-depth-btn">+</button>
-                        <button class="remove-btn">-</button>
+                        <button class="add-depth-btn" type="button">+</button>
+                        <button class="remove-btn" type="button">-</button>
                         <div class="nested-filters"></div>
                     </div>
                 </div>
-                <button id="addLayerBtn">Add</button>
-                <button type="button" onclick="submitFilter('/filter')">Filter</button>
-                <button type="button" onclick="submitDownload('/download')">Download</button>
+                <button id="addLayerBtn" type="button">Add</button>
+                <button type="button" onclick="submitFilter()">Filter</button>
+                <button type="button" onclick="submitDownload()">Download</button>
             </form>
 
+
             <div class="tree-container">
-                {% macro render_node(node) %} 
-                    {% if node.tag == "text" %}
-                        <span class="text-content">"{{ node.text }}"</span>
-                    {% else %}
-                    <details>
-                        <summary>
-                            <span class="tag-name">&lt;{{ node.tag }}</span>
-                            {% for key, value in node.attr.items() %}
-                            <span class="attr-key">{{ key }}</span
-                            ><span style="color: #333">=</span
-                            ><span class="attr-value">"{{ value }}"</span>
-                            {% endfor %}
-                            <span class="tag-name">&gt;</span>
-                        </summary>
-                        <ul>
-                            {% if node.text %}
-                            <li><span class="text-content">"{{ node.text }}"</span></li>
-                            {% endif %} {% for child in node.child %} {{ render_node(child)
-                            }} {% endfor %}
-                        </ul>
-                    </details>
-                    {% endif %} 
-                {% endmacro %}
-            
-                {{ render_node(tag) }}
+                {% if tag %}
+                    {% from 'tree.html' import render_node %}
+                    {{ render_node(tag) }}
+                {% endif %}
             </div>
         </div>
     </body>

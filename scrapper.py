@@ -1,13 +1,6 @@
-import requests
-from lxml import html, etree
+from lxml import etree
 from typing import List, Optional
 from dataclasses import dataclass
-
-def tagExtract(url: str):
-    response = requests.get(url)
-    extracted = html.fromstring(response.content)
-    tree = extractHtmlNode(extracted)
-    return tree
 
 @dataclass
 class Config:
@@ -22,32 +15,6 @@ class HtmlNode:
         self.text: Optional[str] = None
         self.child: List[HtmlNode] = []
         self.lxml_element: Optional[etree._lxml_element] = None
-
-    def xpath(self, path: str):
-        # base condition
-        if not self.lxml_element:
-            return None
-
-        # filter the elements
-        matches = self.lxml_element.xpath(path)
-        current_matches = self.lxml_element in matches
-
-        # new node
-        result = HtmlNode(self.tag, self.attr.copy())
-        result.lxml_element = self.lxml_element
-        result.text = self.text
-
-
-        # for all childrens
-        for child in self.child:
-            filtered_child = child.xpath(path)
-            if filtered_child:
-                result.child.append(filtered_child)
-
-        if current_matches or result.child:
-            return result
-
-        return None
 
     def toJson(self, config: Config):
         result = {}

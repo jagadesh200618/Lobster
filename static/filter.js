@@ -25,42 +25,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/**
- * Creates and returns a new HTML element for a filter group.
- * @returns {HTMLElement} The new filter group element.
- */
-function createFilterGroup() {
-    const group = document.createElement('div');
-    group.className = 'filter-group';
-    group.innerHTML = `
-        <input type="text" placeholder="Value...">
-        <select>
-            <option value="xpath">XPath</option>
-            <option value="tagname">Tag Name</option>
-            <option value="text">Text</option>
-        </select>
-        <button class="add-depth-btn">+</button>
-        <button class="remove-btn">-</button>
-        <div class="nested-filters"></div>
-    `;
-    return group;
+// A single function to get all filters, handling nesting
+function getFilters() {
+    const filtersContainer = document.getElementById('filtersContainer');
+    return getNestedFilters(filtersContainer);
 }
 
-/**
- * Submits the form data by converting it into a JSON object and
- * placing it into a hidden input field.
- * @param {string} action - The URL endpoint for the form submission.
- */
-function submitFilter(url) {
-    // Get the container for the filters
-    const filterContainer = document.getElementById('filtersContainer');
-    const filters = [];
-    
-    // Iterate through each filter-group div
-    filterContainer.querySelectorAll('.filter-group').forEach(group => {
+// Recursively traverses the filter groups to build a nested JSON object.
+function getNestedFilters(container) {
+    const nestedFilters = [];
+    container.querySelectorAll(':scope > .filter-group').forEach(group => {
         const filterData = {};
         
-        // Find input and select elements within the group
         const input = group.querySelector('input[type="text"]');
         const select = group.querySelector('select');
         
@@ -69,72 +45,47 @@ function submitFilter(url) {
             filterData.value = input.value;
         }
 
-        // Handle nested filters (if any)
         const nestedFiltersContainer = group.querySelector('.nested-filters');
-        if (nestedFiltersContainer && nestedFiltersContainer.innerHTML.trim() !== '') {
+        if (nestedFiltersContainer && nestedFiltersContainer.children.length > 0) {
             filterData.depth_options = getNestedFilters(nestedFiltersContainer);
         }
-        
-        filters.push(filterData);
+
+        nestedFilters.push(filterData);
     });
+    return nestedFilters;
+}
 
-    const payload = {
-        filters: filters
-    };
+// Function to handle the filter action (updating the tree on the page)
+function submitFilter() {
+    const payload = { filters: getFilters() };
 
-    fetch(url, {
+    fetch('/filter', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
     })
-    .then(response => response.text())
-    .then(html => {
-        // Find the main-container and replace its content with the new HTML
-        const mainContainer = document.querySelector('.main-container');
-        if (mainContainer) {
-            mainContainer.innerHTML = html;
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.text();
     })
-    .catch(error => console.error('Error:', error));
+    .then(html => {
+        document.querySelector('.tree-container').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('There was a problem with the filter operation:', error);
+    });
 }
 
+// Function to handle the download action (getting a JSON file)
 function submitDownload() {
-
-     // Get the container for the filters
-    const filterContainer = document.getElementById('filtersContainer');
-    const filters = [];
-    
-    // Iterate through each filter-group div
-    filterContainer.querySelectorAll('.filter-group').forEach(group => {
-        const filterData = {};
-        
-        // Find input and select elements within the group
-        const input = group.querySelector('input[type="text"]');
-        const select = group.querySelector('select');
-        
-        if (input && select) {
-            filterData.type = select.value;
-            filterData.value = input.value;
-        }
-
-        // Handle nested filters (if any)
-        const nestedFiltersContainer = group.querySelector('.nested-filters');
-        if (nestedFiltersContainer && nestedFiltersContainer.innerHTML.trim() !== '') {
-            filterData.depth_options = getNestedFilters(nestedFiltersContainer);
-        }
-        
-        filters.push(filterData);
-    });
-
-    const payload = {
-        filters: filters
-    };
+    const payload = { filters: getFilters() };
 
     fetch('/download', {
         method: 'POST',
-
         headers: {
             'Content-Type': 'application/json'
         },
@@ -161,30 +112,20 @@ function submitDownload() {
     });
 }
 
-/**
- * Recursively traverses the filter groups to build a nested JSON object.
- * @param {HTMLElement} container - The HTML element to start the traversal from.
- * @returns {Array<Object>} An array of filter objects.
- */
-function getNestedFilters(container) {
-    const nestedFilters = [];
-    container.querySelectorAll('.filter-group').forEach(group => {
-        const filterData = {};
-        
-        const input = group.querySelector('input[type="text"]');
-        const select = group.querySelector('select');
-        
-        if (input && select) {
-            filterData.type = select.value;
-            filterData.value = input.value;
-        }
-
-        const nestedFiltersContainer = group.querySelector('.nested-filters');
-        if (nestedFiltersContainer && nestedFiltersContainer.innerHTML.trim() !== '') {
-            filterData.depth_options = getNestedFilters(nestedFiltersContainer);
-        }
-
-        nestedFilters.push(filterData);
-    });
-    return nestedFilters;
+// Creates and returns a new HTML element for a filter group.
+function createFilterGroup() {
+    const group = document.createElement('div');
+    group.className = 'filter-group';
+    group.innerHTML = `
+        <input type="text" placeholder="Value...">
+        <select>
+            <option value="xpath">XPath</option>
+            <option value="tagname">Tag Name</option>
+            <option value="text">Text</option>
+        </select>
+        <button class="add-depth-btn" type="button">+</button>
+        <button class="remove-btn" type="button">-</button>
+        <div class="nested-filters"></div>
+    `;
+    return group;
 }
