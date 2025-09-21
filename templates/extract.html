@@ -1,117 +1,265 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Extracted Tags</title>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Extracted Tags</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap"
+            rel="stylesheet"
+        />
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Baloo 2', cursive;
-            background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-            text-align: center;
-            color: #333;
-        }
+        <style>
+            /* General body and container styles */
+            body {
+                font-family: 'Baloo 2', cursive;
+                background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+                color: #4a5568;
+                margin: 0;
+                padding: 0;
+            }
 
-        h1 {
-            font-size: 32px;
-            color: #ff477e;
-            margin: 20px 0;
-        }
+            h1 {
+                font-size: 2.2rem;
+                color: #2d3748;
+                text-align: center;
+                margin-bottom: 24px;
+            }
 
-        .tree-container {
-            width: 70%;
-            margin: 30px auto;
-            padding: 20px;
-            background: #fff;
-            border: 2px solid #ff6b81;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
+            .main-container {
+                display: flex;
+                justify-content: center;
+                gap: 32px;
+                padding: 24px;
+                max-width: 1200px;
+                margin: 0 auto;
+                align-items: flex-start;
+            }
 
-        details {
-            background: #fce4ec;
-            margin: 6px 0;
-            padding: 6px;
-            border: 1px solid #ff6b81;
-            border-radius: 8px;
-        }
+            /* Filter form styles */
+            #filterForm {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                flex: 1;
+                min-width: 300px;
+                max-width: 400px;
+            }
 
-        details[open] {
-            background: #f8bbd0;
-        }
+            /* Filter group and input styles */
+            .filter-group {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
+                background: #f7fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 12px;
+            }
 
-        summary {
-            cursor: pointer;
-            font-size: 16px;
-            color: #c2185b;
-        }
+            .filter-group > input,
+            .filter-group > select {
+                flex: 1 1 45%;
+                padding: 8px;
+                border: 1px solid #cbd5e0;
+                border-radius: 6px;
+                box-sizing: border-box;
+                font-size: 0.9rem;
+            }
 
-        ul {
-            list-style: none;
-            padding-left: 20px;
-        }
+            .button-group {
+                display: flex;
+                gap: 8px;
+                margin-left: auto; /* Pushes the buttons to the right */
+            }
 
-        li {
-            font-size: 15px;
-            margin: 4px 0;
-            padding: 4px;
-            border-left: 3px solid #ff6b81;
-            background: #fafafa;
-            border-radius: 4px;
-        }
+            /* Buttons for adding/removing filters */
+            .add-depth-btn, .remove-btn {
+                background-color: #4299e1;
+                color: white;
+                border: none;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: bold;
+                line-height: 1;
+            }
 
-        /* New CSS for the Macro's Content */
-        .tag-name {
-            color: #880e4f; /* Darker pink for tag name */
-        }
+            .remove-btn {
+                background-color: #e53e3e;
+            }
 
-        .attr-key {
-            color: #b71c1c; /* A deep red for attribute key */
-        }
+            /* Overall form buttons */
+            #addLayerBtn,
+            button[type="button"] {
+                width: 100%;
+                padding: 10px;
+                margin-top: 8px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 1rem;
+            }
 
-        .attr-value {
-            color: #0d47a1; /* A deep blue for attribute value */
-        }
+            #addLayerBtn {
+                background: #38b2ac;
+                color: white;
+            }
 
-        .text-content {
-            color: #388e3c; /* A dark green for text content */
-        }
-    </style>
-</head>
-<body>
-    <h1>HTML Tags Tree</h1>
+            button[type="button"] {
+                background: #4c51bf;
+                color: white;
+            }
 
-    {% macro render_node(node) %}
-        {% if node.tag == "text" %}
-            <span class="text-content">"{{ node.text }}"</span>
-        {% else %}
-            <details>
-                <summary>
-                    <span class="tag-name">&lt;{{ node.tag }}</span>
-                    {% for key, value in node.attr.items() %}
-                        <span class="attr-key">{{ key }}</span><span style="color: #333;">=</span><span class="attr-value">"{{ value }}"</span>
-                    {% endfor %}
-                    <span class="tag-name">&gt;</span>
-                </summary>
-                <ul>
-                    {% if node.text %}
-                        <li><span class="text-content">"{{ node.text }}"</span></li>
-                    {% endif %}
-                    {% for child in node.child %}
-                        {{ render_node(child) }}
-                    {% endfor %}
-                </ul>
-            </details>
-        {% endif %}
-    {% endmacro %}
+            /* Tree container styles */
+            .tree-container {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                flex: 2;
+                min-height: 400px;
+                overflow-y: auto;
+            }
 
-    <div class="tree-container">
-        {{ render_node(tag) }}
-    </div>
-</body>
+            /* Details and Summary for tree view */
+            details {
+                background: #f7fafc;
+                border: 1px solid #e2e8e0;
+                border-radius: 6px;
+                margin-bottom: 8px;
+                padding: 8px;
+            }
+
+            details[open] {
+                background: #edf2f7;
+            }
+
+            summary {
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 0.95rem;
+                color: #4a5568;
+                display: flex;
+                align-items: center;
+                outline: none;
+            }
+
+            summary::before {
+                content: '▶';
+                font-size: 1rem;
+                margin-right: 8px;
+                color: #4c51bf;
+                transition: transform 0.2s ease-in-out;
+            }
+
+            details[open] > summary::before {
+                transform: rotate(90deg);
+            }
+
+            details[open] > summary {
+                color: #38b2ac;
+            }
+
+            /* Tree-like indentation */
+            ul {
+                list-style: none;
+                padding-left: 16px;
+                margin: 8px 0 0 0;
+            }
+
+            li {
+                background: #fdfdfd;
+                border-left: 2px solid #a0aec0;
+                padding: 4px 8px;
+                margin-bottom: 4px;
+                border-radius: 4px;
+                font-size: 0.9rem;
+            }
+
+            /* Syntax highlighting for tree view */
+            .tag-name {
+                color: #4c51bf;
+            }
+
+            .attr-key {
+                color: #b71c1c;
+            }
+
+            .attr-value {
+                color: #38a169;
+            }
+
+            .text-content {
+                color: #2c5282;
+            }
+        </style>
+
+        <script src="{{ url_for('static', filename='filter.js') }}"></script>
+
+    </head>
+    <body>
+        <h1>HTML Tags Tree</h1>
+
+        
+        <div class="main-container">
+            <form id="filterForm">
+                <div id="filtersContainer">
+                    <div class="filter-group">
+                        <input type="text" placeholder="Value...">
+                        <select>
+                            <option value="xpath">XPath</option>
+                            <option value="tagname">Tag Name</option>
+                            <option value="text">Text</option>
+                        </select>
+                        <button class="add-depth-btn">+</button>
+                        <button class="remove-btn">-</button>
+                        <div class="nested-filters"></div>
+                    </div>
+                </div>
+                <button id="addLayerBtn">Add</button>
+                <button type="button" onclick="submitForm('/filter')">Filter</button>
+                <button type="button" onclick="submitForm('/download')">Download</button>
+            </form>
+
+            <div class="tree-container">
+                {% macro render_node(node) %} 
+                    {% if node.tag == "text" %}
+                        <span class="text-content">"{{ node.text }}"</span>
+                    {% else %}
+                    <details>
+                        <summary>
+                            <span class="tag-name">&lt;{{ node.tag }}</span>
+                            {% for key, value in node.attr.items() %}
+                            <span class="attr-key">{{ key }}</span
+                            ><span style="color: #333">=</span
+                            ><span class="attr-value">"{{ value }}"</span>
+                            {% endfor %}
+                            <span class="tag-name">&gt;</span>
+                        </summary>
+                        <ul>
+                            {% if node.text %}
+                            <li><span class="text-content">"{{ node.text }}"</span></li>
+                            {% endif %} {% for child in node.child %} {{ render_node(child)
+                            }} {% endfor %}
+                        </ul>
+                    </details>
+                    {% endif %} 
+                {% endmacro %}
+            
+                {{ render_node(tag) }}
+            </div>
+        </div>
+    </body>
 </html>
