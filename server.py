@@ -3,7 +3,7 @@ import requests
 from lxml import html
 from typing import List
 from scrapper import Config, HtmlNode, extractHtmlNode
-from flask import Flask, render_template, render_template_string, request, session, Response
+from flask import Flask, render_template, render_template_string, request, session, Response, jsonify
 
 app = Flask(__name__)
 app.secret_key = "my-secrect-key"
@@ -83,7 +83,7 @@ def filterFn():
     filtered_elements = original_lxml_tree.xpath(xpath)
     filtered_nodes = build_filtered_tree(filtered_elements)
     print(filtered_nodes.toJson(Config()))
-    return render_template("tree.html", tag=filtered_nodes)
+    return render_template_string("{% from 'tree.html' import render_node %}{{ render_node(tag) }}", tag=filtered_nodes)
 
 @app.route('/download', methods=['POST'])
 def download():

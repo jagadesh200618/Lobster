@@ -1,4 +1,4 @@
-{% macro render_node(node) %} 
+{% macro render_node(node) %}
     {% if node.tag == "text" %}
         <span class="text-content">"{{ node.text }}"</span>
     {% else %}
@@ -19,9 +19,5 @@
             }} {% endfor %}
         </ul>
     </details>
-    {% endif %} 
+    {% endif %}
 {% endmacro %}
-
-{% for node in nodes %}
-{{ render_node(node) }}
-{% endfor %}
